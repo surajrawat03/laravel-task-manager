@@ -13,6 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call([
+            RoleSeeder::class,    // Ensure roles exist first
+            UserSeeder::class,    // Ensure users exist first
+            RoleUserSeeder::class // Seed pivot table
+        ]);
     }
 }
