@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -41,4 +42,34 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsToMany(Role::class)->first();
+    }
+
+    public function hasRole($role) : bool
+    {
+        return $this->role()->name && $this->role()->name == $role;
+    }
+
+    public function hasAnyRole(array $roles) : bool
+    {
+        return $this->role() && in_array($this->role()->name, $roles);
+    }
+
+    public function isAdmin() : bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function isManager() : bool
+    {
+        return $this->hasRole('manager');
+    }
 }
