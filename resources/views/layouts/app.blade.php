@@ -44,8 +44,10 @@
             </header>
 
             <!-- Page Content -->
-            <main class="p-6">
+            <main class="">
                 {{ $slot }}
+                <!-- Include the Toast Component -->
+     @include('components.toast', ['type' => session('type'), 'message' => session('message')])
             </main>
         </div>
 
@@ -65,5 +67,9 @@
                 overlay?.classList.add('hidden');
             });
         </script>
+
+        @if(isset($script))
+            {{$script}}
+        @endif
     </body>
 </html>
