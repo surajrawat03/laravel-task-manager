@@ -13,6 +13,7 @@
                 </div>
             @endif
 
+            <input type="hidden" name="id" value="{{ $user->id }}" />
             <!-- Name -->
             <div>
                 <x-label for="name" :value="__('Name')" />

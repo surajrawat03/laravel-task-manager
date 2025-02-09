@@ -42,14 +42,14 @@ class RegisteredUserController extends Controller
         ]);
 
         try {
+            $defaultId = Role::where('name', 'employee')->first()->id;
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'role_id' => $request->roleId ? $request->roleId : $defaultId,
+                'status' => $request->status ? $request->status : config('constant.projects.userStatus.active'),
             ]);
-
-            $defaultId = Role::where('name', 'employee')->first()->id;
-            $request->roleId ? $user->roles()->sync([$request->roleId]) : $user->roles()->sync([$defaultId]);
 
            event(new Registered($user));
            Auth::login($user);
@@ -64,7 +64,6 @@ class RegisteredUserController extends Controller
                     return redirect()->route('employee-dashboard'); // Fallback to employee dashboard
             }
         } catch (\Exception $e) {
-    
             // Return an error response to the user
             return back()->withErrors(['error' => 'An error occurred while registering the user. Please try again.']);
         }

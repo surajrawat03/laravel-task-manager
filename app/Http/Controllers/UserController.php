@@ -7,19 +7,26 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
         return view('admin.showUser');
     }
 
+    /**
+     * Display a filtered list of users in a table.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
     public function showUserTable(Request $request)
     {
         $query = User::query();
@@ -30,12 +37,10 @@ class UserController extends Controller
                     $query->where('email', 'like', '%' . $value . '%');
                     break;
                 case 'userRole':
-                    $query->whereHas('roles', function($q) use ($value) {
-                        $q->where('role_user.role_id', $value);  // Filter by roleId
-                    });
+                    $query->where('role_id', '=' , $value);
                     break;
                 case 'userStatus':
-                    $query->where('status', 'like', '%' . $value . '%');
+                    $query->where('status', '=', $value );
                     break;
             }
         }
@@ -47,22 +52,24 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function create()
     {
-        //
+        $roles = Role::all();
+        return view('admin.createUser', ['roles' => $roles]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\UserRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        //
+        user::create($request->validated());
+        return  redirect()->route('admin-show-user')->with(['type' => 'success','message' => 'User created successfully']);
     }
 
     /**
@@ -82,7 +89,7 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit($id)
     {
@@ -94,24 +101,19 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\UserRequest  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255',  Rule::unique('users')->ignore($id)],
-            'status' => ['required', 'string'],
-            'role_id' => ['required', 'integer'],
-        ]);
+        // $validatedData = $request->validate();
 
         // Find the user by ID or fail with a 404 error
         $user = User::findOrFail($id);
 
         // Update the user with validated data
-        $user->update($validatedData);
+        $user->update($request->validated());
 
         return redirect()->route('admin-show-user')->with([
             'type' => 'success',

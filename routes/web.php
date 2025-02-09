@@ -25,6 +25,8 @@ Route::middleware('auth')->group(function () {
             return view('admin.dashboard');
         })->name('admin-dashboard');
 
+        Route::get('/createUser', [UserController::class, 'create'])->name('create-user');
+        Route::post('/storeUser', [UserController::class, 'store'])->name('store-user');
         Route::get('/showUser', [UserController::class, 'index'])->name('admin-show-user');
         Route::post('/showUserTable', [UserController::class, 'showUserTable'])->name('admin-show-user-table');
         Route::get('/editUser/{id}', [UserController::class, 'edit'])->name('edit-user');
