@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
+        'status'
     ];
 
     /**
@@ -43,33 +45,28 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
-    }
-
     public function role()
     {
-        return $this->belongsToMany(Role::class)->first();
+        return $this->belongsTo(Role::class);
     }
 
     public function hasRole($role) : bool
     {
-        return $this->role()->name && $this->role()->name == $role;
+        return $this->role->name && $this->role->name == $role;
     }
 
     public function hasAnyRole(array $roles) : bool
     {
-        return $this->role() && in_array($this->role()->name, $roles);
+        return $this->role && in_array($this->role->name, $roles);
     }
 
     public function isAdmin() : bool
     {
-        return $this->hasRole('admin');
+        return $this->hasRole(config('constant.projects.userRole.admin'));
     }
 
     public function isManager() : bool
     {
-        return $this->hasRole('manager');
+        return $this->hasRole(config('constant.projects.userRole.manager'));
     }
 }
