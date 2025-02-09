@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,20 +20,28 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::middleware('role:admin')->group(function () {
-        Route::get('/admin/dashboard', function () {
+    Route::prefix('admin')->middleware('role:Admin')->group(function () {
+        Route::get('/dashboard', function () {
             return view('admin.dashboard');
         })->name('admin-dashboard');
+
+        Route::get('/createUser', [UserController::class, 'create'])->name('create-user');
+        Route::post('/storeUser', [UserController::class, 'store'])->name('store-user');
+        Route::get('/showUser', [UserController::class, 'index'])->name('admin-show-user');
+        Route::post('/showUserTable', [UserController::class, 'showUserTable'])->name('admin-show-user-table');
+        Route::get('/editUser/{id}', [UserController::class, 'edit'])->name('edit-user');
+        Route::post('/update/{id}', [UserController::class, 'update'])->name('update-user');
+        Route::post('/delete/{id}', [UserController::class, 'delete'])->name('delete-user');
     });
 
-    Route::middleware('role:manager')->group(function () {
-        Route::get('/manager/dashboard', function () {
+    Route::prefix('manager')->middleware('role:Manager')->group(function () {
+        Route::get('/dashboard', function () {
             return view('manager.dashboard');
         })->name('manager-dashboard');
     });
 
-    Route::middleware('role:employee')->group(function () {
-        Route::get('/employee/dashboard', function () {
+    Route::prefix('employee')->middleware('role:Employee')->group(function () {
+        Route::get('/dashboard', function () {
             return view('employee.dashboard');
         })->name('employee-dashboard');
     });

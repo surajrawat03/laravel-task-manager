@@ -14,9 +14,25 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $roles = ['admin', 'manager', 'employee'];
-        foreach ($roles as $role) {
-            Role::create(['name' => $role]);
-        }
+        $roles = 
+        [
+            [
+            'name' => config('constant.projects.userRole.admin'), 
+            'created_at' => now(),
+            'updated_at' => now()
+            ],
+            [
+                'name' => config('constant.projects.userRole.manager'), 
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => config('constant.projects.userRole.employee'), 
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
+        ];
+
+        Role::insert($roles);
     }
 }
