@@ -3432,10 +3432,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bootstrap__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
+/* harmony import */ var _commonFunction__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./commonFunction */ "./resources/js/commonFunction.js");
+
 
 
 window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_1__["default"];
 alpinejs__WEBPACK_IMPORTED_MODULE_1__["default"].start();
+window.filterNonEmptyValues = _commonFunction__WEBPACK_IMPORTED_MODULE_2__.filterNonEmptyValues;
+window.clearFilter = _commonFunction__WEBPACK_IMPORTED_MODULE_2__.clearFilter;
 
 /***/ }),
 
@@ -3472,6 +3476,50 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/commonFunction.js":
+/*!****************************************!*\
+  !*** ./resources/js/commonFunction.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   clearFilter: () => (/* binding */ clearFilter),
+/* harmony export */   filterNonEmptyValues: () => (/* binding */ filterNonEmptyValues),
+/* harmony export */   showErrorMessage: () => (/* binding */ showErrorMessage),
+/* harmony export */   showSuccessMessage: () => (/* binding */ showSuccessMessage)
+/* harmony export */ });
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function filterNonEmptyValues(data) {
+  var filteredData = {};
+  for (var _i = 0, _Object$entries = Object.entries(data); _i < _Object$entries.length; _i++) {
+    var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+      key = _Object$entries$_i[0],
+      value = _Object$entries$_i[1];
+    if (value !== null && value !== undefined && value !== '') {
+      filteredData[key] = value;
+    }
+  }
+  return filteredData;
+}
+function clearFilter(formId) {
+  document.getElementById(formId).reset();
+}
+function showSuccessMessage(message) {
+  alertify.success(message);
+}
+function showErrorMessage(message) {
+  alertify.error(message);
+}
 
 /***/ }),
 
